@@ -1,8 +1,8 @@
 package com.mido.a7minutesworkout
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.mido.a7minutesworkout.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -13,12 +13,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
+        ///// Start ExerciseActivity
         binding?.flStart?.setOnClickListener {
-            Toast.makeText(this, "hi", Toast.LENGTH_LONG).show()
+            startActivity(Intent(this, ExerciseActivity::class.java))
         }
     }
 
-    // clean way to un-assign binding to avoid memory leak
+    ///// A clean way to un-assign binding to avoid memory leak
     override fun onDestroy() {
         super.onDestroy()
 
