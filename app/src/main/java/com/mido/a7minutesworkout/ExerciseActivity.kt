@@ -26,7 +26,14 @@ class ExerciseActivity : AppCompatActivity() {
     ///// Rest time for exercise timer
     private var  exerciseProgress = 0
 
-    //endregion Variables
+
+    ///// Exercises list
+    private var exerciseList : ArrayList<ExerciseModel>? = null
+
+    ///// Variable for current exercise position ID (by incrementing value ++1 it will be 0 which the first position in the Array )
+    private var currentExercisePosition = -1
+
+    //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +53,9 @@ class ExerciseActivity : AppCompatActivity() {
 
         ///// Call ProgressBar Timer fun
         setupRestView()
+
+        ///// Fill exercises list using fun that returns the exercises
+        exerciseList = Constants.defaultExerciseList()
 
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +79,9 @@ class ExerciseActivity : AppCompatActivity() {
 
                 ///// Call Exercise views & it's timer start function
                 setupExerciseView()
+
+                ///// Change position to the nest exercise
+                currentExercisePosition++
             }
 
         }.start()
@@ -86,7 +99,7 @@ class ExerciseActivity : AppCompatActivity() {
         setRestProgressBar()
     }
 
-    //endregion Timer functions
+    //endregion
 
     //region #2 ExerciseTimer functions
 
@@ -124,7 +137,7 @@ class ExerciseActivity : AppCompatActivity() {
         setExerciseProgressBar()
     }
 
-    //endregion Timer functions
+    //endregion
 
 
     override fun onDestroy() {
