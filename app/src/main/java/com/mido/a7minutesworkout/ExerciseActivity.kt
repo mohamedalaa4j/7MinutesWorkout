@@ -16,19 +16,18 @@ class ExerciseActivity : AppCompatActivity() {
     private var restTimer: CountDownTimer? = null
 
     ///// Rest time for resting timer
-    private var  restProgress = 0
-
+    private var restProgress = 0
 
 
     ///// Exercise timer
     private var exerciseTimer: CountDownTimer? = null
 
     ///// Rest time for exercise timer
-    private var  exerciseProgress = 0
+    private var exerciseProgress = 0
 
 
     ///// Exercises list
-    private var exerciseList : ArrayList<ExerciseModel>? = null
+    private var exerciseList: ArrayList<ExerciseModel>? = null
 
     ///// Variable for current exercise position ID (by incrementing value ++1 it will be 0 which the first position in the Array )
     private var currentExercisePosition = -1
@@ -63,7 +62,7 @@ class ExerciseActivity : AppCompatActivity() {
     //region #1 RestTimer functions
 
     ///// Setup CountDownTimer object
-    private fun setRestProgressBar(){
+    private fun setRestProgressBar() {
         binding?.progressBar?.progress = restProgress
 
         restTimer = object : CountDownTimer(10000, 1000) {
@@ -71,27 +70,34 @@ class ExerciseActivity : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++
                 binding?.progressBar?.progress = 10 - restProgress
-                binding?.tvTimer?.text = (10 - restProgress ).toString()
+                binding?.tvTimer?.text = (10 - restProgress).toString()
             }
 
             override fun onFinish() {
                 // Toast.makeText(this@ExerciseActivity, "Here now we will start the exercise.", Toast.LENGTH_SHORT).show()
 
-                ///// Call Exercise views & it's timer start function
-                setupExerciseView()
-
                 ///// Change position to the nest exercise
                 currentExercisePosition++
+
+                ///// Call Exercise views & it's timer start function
+                setupExerciseView()
             }
 
         }.start()
     }
 
     ///// Check & cancel RestTimer if it's not null in case back button pressed -> and call setRestProgressBar()
-    private fun setupRestView(){
+    private fun setupRestView() {
+
+        ///// Invert views of the exercises in rest time
+        binding?.flRestView?.visibility = View.VISIBLE
+        binding?.tvTitle?.visibility = View.VISIBLE
+        binding?.tvExerciseName?.visibility = View.INVISIBLE
+        binding?.flExerciseView?.visibility = View.INVISIBLE
+        binding?.ivImage?.visibility = View.INVISIBLE
 
         ///// Reset timer on destroying the activity
-        if (restTimer != null){
+        if (restTimer != null) {
             restTimer?.cancel()
             restProgress = 0
         }
@@ -104,35 +110,51 @@ class ExerciseActivity : AppCompatActivity() {
     //region #2 ExerciseTimer functions
 
     ///// Setup CountDownTimer object
-    private fun setExerciseProgressBar(){
+    private fun setExerciseProgressBar() {
         binding?.progressBarExercise?.progress = exerciseProgress
 
-       exerciseTimer = object : CountDownTimer(30000, 1000) {
+        exerciseTimer = object : CountDownTimer(30000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
                 binding?.progressBarExercise?.progress = 30 - exerciseProgress
-                binding?.tvTimerExercise?.text = (30 - exerciseProgress ).toString()
+                binding?.tvTimerExercise?.text = (30 - exerciseProgress).toString()
             }
 
             override fun onFinish() {
-                Toast.makeText(this@ExerciseActivity, "30 Seconds are over, let's go to the rest view.", Toast.LENGTH_SHORT).show()
+                ///// When exercise finished go back to rest view & it's timer ** unless exercises have not finished yet
+                if (currentExercisePosition < exerciseList?.size!! -1){
+                    ///// Call RestTimer function
+                    setupRestView()
+                }else{
+                    Toast.makeText(this@ExerciseActivity, "Congratulations! You have completed the 7 Minutes Workout.",
+                        Toast.LENGTH_SHORT).show()
+                }
             }
 
         }.start()
     }
 
-    private fun setupExerciseView(){
+    private fun setupExerciseView() {
 
-        binding?.flProgressBar?.visibility = View.INVISIBLE
-        binding?.tvTitle?.text = "Exercise Name"
+        binding?.flRestView?.visibility = View.INVISIBLE
+        binding?.tvTitle?.visibility = View.INVISIBLE
+        binding?.tvExerciseName?.visibility = View.VISIBLE
         binding?.flExerciseView?.visibility = View.VISIBLE
+        binding?.ivImage?.visibility = View.VISIBLE
 
         ///// Reset the timer
-        if (exerciseTimer != null){
+        if (exerciseTimer != null) {
             exerciseTimer?.cancel()
             exerciseProgress = 0
         }
+
+        ///// Set exercise image (using getter fun as it's private property & can't be access directly)
+        binding?.ivImage?.setImageResource(exerciseList!![currentExercisePosition].getImage())
+
+        ///// Set exercise name (using getter fun as it's private property & can't be access directly)
+        binding?.tvExerciseName?.text = exerciseList!![currentExercisePosition].getName()
+
 
         setExerciseProgressBar()
     }
@@ -147,13 +169,13 @@ class ExerciseActivity : AppCompatActivity() {
         binding = null
 
         ///// Reset timer on destroying the activity
-        if (restTimer != null){
+        if (restTimer != null) {
             restTimer?.cancel()
             restProgress = 0
         }
 
         ///// Exercise timer on destroying the activity
-        if (exerciseTimer != null){
+        if (exerciseTimer != null) {
             exerciseTimer?.cancel()
             exerciseProgress = 0
         }

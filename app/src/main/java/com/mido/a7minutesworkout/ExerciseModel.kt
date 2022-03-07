@@ -10,6 +10,9 @@ class ExerciseModel (
 
 ){
 
+    ///// Getter & Setter because properties are private & can't be accessed directly
+    //region Getters & Setters
+
     fun getId() : Int{
         return id
     }
@@ -53,4 +56,6 @@ class ExerciseModel (
     fun setIsSelected(isSelected: Boolean){
         this.isSelected = isSelected
     }
+
+    //endregion
 }
