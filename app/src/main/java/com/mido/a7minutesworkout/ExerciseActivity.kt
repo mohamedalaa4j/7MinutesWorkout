@@ -50,11 +50,12 @@ class ExerciseActivity : AppCompatActivity() {
             onBackPressed() // A go back function
         }
 
-        ///// Call ProgressBar Timer fun
-        setupRestView()
 
         ///// Fill exercises list using fun that returns the exercises
         exerciseList = Constants.defaultExerciseList()
+
+        ///// Call ProgressBar Timer fun
+        setupRestView()
 
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,6 +96,12 @@ class ExerciseActivity : AppCompatActivity() {
         binding?.tvExerciseName?.visibility = View.INVISIBLE
         binding?.flExerciseView?.visibility = View.INVISIBLE
         binding?.ivImage?.visibility = View.INVISIBLE
+
+        ///// Set exercise name label
+        binding?.tvUpcomingLabel?.visibility = View.VISIBLE
+        binding?.tvUpComingExerciseName?.visibility = View.VISIBLE
+        binding?.tvUpComingExerciseName?.text = exerciseList!![currentExercisePosition +1 ].getName()
+
 
         ///// Reset timer on destroying the activity
         if (restTimer != null) {
@@ -142,6 +149,10 @@ class ExerciseActivity : AppCompatActivity() {
         binding?.tvExerciseName?.visibility = View.VISIBLE
         binding?.flExerciseView?.visibility = View.VISIBLE
         binding?.ivImage?.visibility = View.VISIBLE
+
+        ///// Set exercise name label to INVISIBLE
+        binding?.tvUpcomingLabel?.visibility = View.INVISIBLE
+        binding?.tvUpComingExerciseName?.visibility = View.INVISIBLE
 
         ///// Reset the timer
         if (exerciseTimer != null) {
