@@ -1,5 +1,7 @@
 package com.mido.a7minutesworkout
 
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -38,6 +40,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     ///// Text to speech object
     private var tts: TextToSpeech? = null
+
+    ///// Media Player object
+    private var player: MediaPlayer? = null
 
     //endregion
 
@@ -114,6 +119,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding?.tvUpComingExerciseName?.visibility = View.VISIBLE
         binding?.tvUpComingExerciseName?.text =
             exerciseList!![currentExercisePosition + 1].getName()
+
+        ///// Call Media Player function
+        mediaPlayer()
 
 
         ///// Reset timer on destroying the activity
@@ -216,6 +224,22 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
     //endregion
 
+    //region Media Player function
+    private fun mediaPlayer(){
+        try {
+            ///// URI (Uniform Resource Identifier) -> Identify sound file
+            val soundURI = Uri.parse("android.resource://com.mido.a7minutesworkout/" + R.raw.press_start)
+
+            ///// Use Player object & pass identified sound file
+            player = MediaPlayer.create(applicationContext,soundURI)
+            player?.isLooping = false
+            player?.start()
+
+        }catch (e: Exception){e.printStackTrace()}
+    }
+
+    //endregion
+
     override fun onDestroy() {
         super.onDestroy()
 
@@ -238,6 +262,11 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (tts != null){
             tts?.stop()
             tts?.shutdown()
+        }
+
+        ///// Stop MediaPlayer
+        if (player != null){
+            player!!.stop()
         }
 
     }
