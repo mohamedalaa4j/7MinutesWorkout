@@ -9,6 +9,7 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mido.a7minutesworkout.databinding.ActivityExerciseBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -44,6 +45,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     ///// Media Player object
     private var player: MediaPlayer? = null
 
+    ///// Exercise status RecyclerView Adapter
+    private var exerciseAdapter: ExerciseStatusAdapter? = null
+
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +78,9 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         ///// Call ProgressBar Timer fun
         setupRestView()
 
+        ///// Call Exercise status recyclerview fun
+        setupExerciseStatusRecyclerView()
+
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -96,6 +103,14 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 ///// Change position to the nest exercise
                 currentExercisePosition++
+
+                //region RecyclerView items appearance
+                ///// Set isSelected to true for the finished exercise
+                exerciseList!![currentExercisePosition].setIsSelected(true)
+
+                ///// Tell the RV adapter that the data changed to re-call the methods & change the views
+                exerciseAdapter!!.notifyDataSetChanged()
+                //endregion
 
                 ///// Call Exercise views & it's timer start function
                 setupExerciseView()
@@ -153,6 +168,16 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
 
             override fun onFinish() {
+
+                //region RecyclerView items appearance
+                ///// Set isSelected to true for the finished exercise
+                exerciseList!![currentExercisePosition].setIsSelected(false)
+                exerciseList!![currentExercisePosition].setIsCompleted(true)
+
+                ///// Tell the RV adapter that the data changed to re-call the methods & change the views
+                exerciseAdapter!!.notifyDataSetChanged()
+                //endregion
+
                 ///// When exercise finished go back to rest view & it's timer ** unless exercises have not finished yet
                 if (currentExercisePosition < exerciseList?.size!! - 1) {
                     ///// Call RestTimer function
@@ -236,6 +261,17 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             player?.start()
 
         }catch (e: Exception){e.printStackTrace()}
+    }
+
+    //endregion
+
+    //region Exercise status recyclerView function
+    private fun setupExerciseStatusRecyclerView(){
+        binding?.rvExerciseStatus?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        exerciseAdapter = ExerciseStatusAdapter(exerciseList!!)
+        binding?.rvExerciseStatus?.adapter = exerciseAdapter
+
     }
 
     //endregion
