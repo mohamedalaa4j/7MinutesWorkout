@@ -1,5 +1,6 @@
 package com.mido.a7minutesworkout
 
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +9,6 @@ import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mido.a7minutesworkout.databinding.ActivityExerciseBinding
 import java.util.*
@@ -31,6 +31,10 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     ///// Rest time for exercise timer
     private var exerciseProgress = 0
+
+    ///// Timers duration
+    private var restTimerDuration: Long = 3
+    private var exerciseTimerDuration: Long = 5
 
 
     ///// Exercises list
@@ -90,7 +94,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun setRestProgressBar() {
         binding?.progressBar?.progress = restProgress
 
-        restTimer = object : CountDownTimer(10000, 1000) {
+        restTimer = object : CountDownTimer(restTimerDuration*1000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++
@@ -159,7 +163,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private fun setExerciseProgressBar() {
         binding?.progressBarExercise?.progress = exerciseProgress
 
-        exerciseTimer = object : CountDownTimer(30000, 1000) {
+        exerciseTimer = object : CountDownTimer(exerciseTimerDuration*1000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
@@ -169,25 +173,29 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             override fun onFinish() {
 
-                //region RecyclerView items appearance
-                ///// Set isSelected to true for the finished exercise
-                exerciseList!![currentExercisePosition].setIsSelected(false)
-                exerciseList!![currentExercisePosition].setIsCompleted(true)
-
-                ///// Tell the RV adapter that the data changed to re-call the methods & change the views
-                exerciseAdapter!!.notifyDataSetChanged()
-                //endregion
-
                 ///// When exercise finished go back to rest view & it's timer ** unless exercises have not finished yet
                 if (currentExercisePosition < exerciseList?.size!! - 1) {
+
+                    //region RecyclerView items appearance
+                    ///// Set isSelected to true for the finished exercise
+                    exerciseList!![currentExercisePosition].setIsSelected(false)
+                    exerciseList!![currentExercisePosition].setIsCompleted(true)
+
+                    ///// Tell the RV adapter that the data changed to re-call the methods & change the views
+                    exerciseAdapter!!.notifyDataSetChanged()
+                    //endregion
+
                     ///// Call RestTimer function
                     setupRestView()
                 } else {
-                    Toast.makeText(
-                        this@ExerciseActivity,
-                        "Congratulations! You have completed the 7 Minutes Workout.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                  //  Toast.makeText( this@ExerciseActivity, "Congratulations! You have completed the 7 Minutes Workout.", Toast.LENGTH_SHORT ).show()
+
+                      ///// Finish the activity
+                    finish()
+
+                    ///// Move to the finish activity
+                    val intent = Intent (this@ExerciseActivity,FinishActivity::class.java)
+                    startActivity(intent)
                 }
             }
 
