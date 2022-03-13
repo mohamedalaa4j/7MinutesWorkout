@@ -1,5 +1,6 @@
 package com.mido.a7minutesworkout
 
+import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mido.a7minutesworkout.databinding.ActivityExerciseBinding
+import com.mido.a7minutesworkout.databinding.DialogCustomBackConfirmationBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -69,7 +71,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         ///// The listener of back button in the toolbar
         binding?.toolbarExercise?.setNavigationOnClickListener {
-            onBackPressed() // A go back function
+           // onBackPressed() // A go back function
+            customDialogForBackButton()
         }
         //endregion
 
@@ -283,6 +286,38 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     //endregion
+
+    ///// Back button confirmation dialog function
+    private fun customDialogForBackButton(){
+        val customDialog = Dialog(this)
+
+        val dialogBinding = DialogCustomBackConfirmationBinding.inflate(layoutInflater)
+
+        customDialog.setContentView(dialogBinding.root)
+
+        ///// Prevent canceling on touch outside the dialog
+        customDialog.setCanceledOnTouchOutside(false)
+
+        dialogBinding.btnYes.setOnClickListener {
+            ///// Finish the current activity
+            ///// Using onBackPressed() will go back without finishing the activity
+            this@ExerciseActivity.finish()
+            customDialog.dismiss()
+        }
+
+        dialogBinding.btnNo.setOnClickListener{
+            customDialog.dismiss()
+        }
+
+        customDialog.show()
+    }
+
+    ///// Override onBackPressed() to display confirmation dialog first
+    override fun onBackPressed() {
+        customDialogForBackButton()
+        ///// Comment super.onBackPressed() to prevent using the super class (parent) implementation
+       // super.onBackPressed()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
