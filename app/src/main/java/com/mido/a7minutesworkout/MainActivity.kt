@@ -17,6 +17,11 @@ class MainActivity : AppCompatActivity() {
         binding?.flStart?.setOnClickListener {
             startActivity(Intent(this, ExerciseActivity::class.java))
         }
+
+        ///// Start BMIActivity
+        binding?.flBMI?.setOnClickListener {
+            startActivity(Intent(this, BMIActivity::class.java))
+        }
     }
 
     ///// A clean way to un-assign binding to avoid memory leak

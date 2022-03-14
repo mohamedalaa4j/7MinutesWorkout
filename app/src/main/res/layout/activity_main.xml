@@ -20,10 +20,12 @@
         android:id="@+id/flStart"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:background="@drawable/item_color_accent_border_ripple_background"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/item_color_accent_border_ripple_background"
-        app:layout_constraintTop_toBottomOf="@id/myImageView">
+        app:layout_constraintTop_toBottomOf="@id/myImageView"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,5 +37,38 @@
             android:textStyle="bold" />
 
     </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/flBMI"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/item_circular_color_accent_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/flStart">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="BMI"
+            android:textColor="@color/white"
+            android:textSize="@dimen/default_button_text_size"
+            android:textStyle="bold" />
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Calculator"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/default_button_text_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/flBMI" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

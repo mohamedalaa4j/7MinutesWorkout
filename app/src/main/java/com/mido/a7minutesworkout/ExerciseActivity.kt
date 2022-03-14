@@ -287,6 +287,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     //endregion
 
+    //region Back button confirmation
+
     ///// Back button confirmation dialog function
     private fun customDialogForBackButton(){
         val customDialog = Dialog(this)
@@ -318,6 +320,8 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         ///// Comment super.onBackPressed() to prevent using the super class (parent) implementation
        // super.onBackPressed()
     }
+
+    //endregion
 
     override fun onDestroy() {
         super.onDestroy()
