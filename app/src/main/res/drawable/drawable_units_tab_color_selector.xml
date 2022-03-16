@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- use white color in case it's checked -->
+    <item android:state_checked="true"
+          android:color="#FFFFFF"
+        />
+
+    <!-- use gray color in case it's checked -->
+    <item android:state_checked="false"
+        android:color="#ADB3BE"
+        />
+
+</selector>

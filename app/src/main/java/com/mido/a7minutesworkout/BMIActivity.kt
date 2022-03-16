@@ -11,6 +11,15 @@ import java.math.RoundingMode
 class BMIActivity : AppCompatActivity() {
     private var binding: ActivityBmiBinding? = null
 
+    //region Which units is selected
+    companion object {
+        private const val METRIC_UNITS_VIEW = "METRIC_UNITS_VIEW"
+        private const val US_UNITS_VIEW = "US_UNITS_VIEW"
+    }
+    ///// A variable to hold a value to determine which units is selected
+    private var currentVisibleView: String = METRIC_UNITS_VIEW
+    //endregion
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBmiBinding.inflate(layoutInflater)
@@ -33,9 +42,38 @@ class BMIActivity : AppCompatActivity() {
         }
         //endregion
 
+        //region RadioGroup
+
+        ///// Set metric units as default
+        makeVisibleMetricUnitsView()
+
+        ///// Listener for the checked one
+        binding?.rgUnits?.setOnCheckedChangeListener { _, checkedId: Int ->
+            if (checkedId == R.id.rbMetricUnits){
+                makeVisibleMetricUnitsView()
+            }else {
+                makeVisibleUsUnitsView()
+            }
+        }
+        //endregion
+
         ///// Calculate button listener
         binding?.btnCalculateUnits?.setOnClickListener {
-            ///// Check if EditTexts is empty first then execute the calculation
+            calculateUnits()
+        }
+    }
+
+
+    //region BMI calculator functions
+
+    ///// Calculator for METRIC/US unites
+    private fun calculateUnits(){
+
+        ///// Check which units selected
+        if (currentVisibleView == METRIC_UNITS_VIEW){
+
+            ///// METRIC_UNITS_VIEW
+                ///// Check if editTexts empty first
             if (validateMetricUnits()){
 
                 ///// BMI formula variables
@@ -51,10 +89,59 @@ class BMIActivity : AppCompatActivity() {
             }else{
                 Toast.makeText(this@BMIActivity, "Please enter valid values", Toast.LENGTH_SHORT).show()
             }
+
+
+        }else
+
+            ///// US_UNITS_VIEW
+                ///// Check if editTexts empty first
+            if (validateUsUnits()){
+            val usUnitHeightValueFeet: String = binding?.etUsMetricUnitHeightFeet?.text.toString()
+            val usUnitHeightValueInch: String = binding?.etUsMetricUnitHeightInch?.text.toString()
+            val usUnitWeightValue: Float = binding?.etUsMetricUnitWeight?.text.toString().toFloat()
+
+            val heightValue = usUnitHeightValueInch.toFloat() + usUnitHeightValueFeet.toFloat() * 12
+
+            val bmi = 703 * (usUnitWeightValue / (heightValue * heightValue))
+
+            ///// Function to format the bmi value & display info about the calculated BMI
+            displayBMIResult(bmi)
+
+        }else {
+            Toast.makeText(this@BMIActivity, "Please enter valid values", Toast.LENGTH_SHORT).show()
         }
     }
 
-    //region BMI calculator functions
+    ///// Check if EditTexts is empty (METRIC)
+    private fun validateMetricUnits(): Boolean {
+        var isValid = true
+
+        if (binding?.etMetricUnitWeight?.text.toString().isEmpty()){
+            isValid = false
+
+        }else if (binding?.etMetricUnitHeight?.text.toString().isEmpty()){
+            isValid = false
+        }
+
+        return isValid
+    }
+
+    ///// Check if EditTexts is empty (US)
+    private fun validateUsUnits(): Boolean {
+        var isValid = true
+
+        when {
+            binding?.etUsMetricUnitHeightFeet?.text.toString().isEmpty() -> { isValid = false }
+
+            binding?.etUsMetricUnitHeightInch?.text.toString().isEmpty() -> { isValid = false }
+
+            binding?.etUsMetricUnitWeight?.text.toString().isEmpty() -> { isValid = false }
+        }
+
+        return isValid
+    }
+
+    ///// Function to format the bmi value & display info about the calculated BMI
     private fun displayBMIResult(bmi: Float){
 
         //region BMI conditions info
@@ -101,21 +188,52 @@ class BMIActivity : AppCompatActivity() {
         binding?.tvBMIValue?.text = bmiValue
 
     }
+    //endregion
 
-    ///// Check if EditTexts is empty
-    private fun validateMetricUnits(): Boolean {
-        var isValid = true
+    //region RadioGroup set Views functions
 
-        if (binding?.etMetricUnitWeight?.text.toString().isEmpty()){
-            isValid = false
+    ///// Metric units choice
+    private fun makeVisibleMetricUnitsView(){
+        currentVisibleView = METRIC_UNITS_VIEW
 
-        }else if (binding?.etMetricUnitHeight?.text.toString().isEmpty()){
-            isValid = false
-        }
+        ///// Show metric units editTexts
+        binding?.tilMetricUnitHeight?.visibility = View.VISIBLE
+        binding?.tilMetricUnitWeight?.visibility = View.VISIBLE
 
-        return isValid
+        ///// Hide US units editTexts
+        binding?.tilUsMetricUnitWeight?.visibility = View.GONE
+        binding?.tilMetricUsUnitHeightFeet?.visibility = View.GONE
+        binding?.tilMetricUsUnitHeightInch?.visibility = View.GONE
+
+        ///// Clear editTexts
+        binding?.etMetricUnitHeight?.text?.clear()
+        binding?.etMetricUnitWeight?.text?.clear()
+
+        ///// Hide BMI results
+        binding?.llDisplayMBIResult?.visibility = View.INVISIBLE
     }
 
+    ///// US units choice
+    private fun makeVisibleUsUnitsView(){
+        currentVisibleView = US_UNITS_VIEW
+
+        ///// Hide metric units editTexts
+        binding?.tilMetricUnitHeight?.visibility = View.INVISIBLE
+        binding?.tilMetricUnitWeight?.visibility = View.INVISIBLE
+
+        ///// Show US units editTexts
+        binding?.tilUsMetricUnitWeight?.visibility = View.VISIBLE
+        binding?.tilMetricUsUnitHeightFeet?.visibility = View.VISIBLE
+        binding?.tilMetricUsUnitHeightInch?.visibility = View.VISIBLE
+
+        ///// Clear editTexts
+        binding?.etUsMetricUnitHeightFeet?.text?.clear()
+        binding?.etUsMetricUnitHeightInch?.text?.clear()
+        binding?.etUsMetricUnitWeight?.text?.clear()
+
+        ///// Hide BMI results
+        binding?.llDisplayMBIResult?.visibility = View.INVISIBLE
+    }
     //endregion
 
     override fun onDestroy() {
