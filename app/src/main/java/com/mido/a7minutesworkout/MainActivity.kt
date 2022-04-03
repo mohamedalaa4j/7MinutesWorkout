@@ -22,6 +22,11 @@ class MainActivity : AppCompatActivity() {
         binding?.flBMI?.setOnClickListener {
             startActivity(Intent(this, BMIActivity::class.java))
         }
+
+        ///// Start HistoryActivity
+        binding?.flHistory?.setOnClickListener {
+            startActivity(Intent(this, HistoryActivity::class.java))
+        }
     }
 
     ///// A clean way to un-assign binding to avoid memory leak

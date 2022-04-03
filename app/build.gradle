@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -36,6 +37,22 @@ android {
 }
 
 dependencies {
+
+    //region Room
+    def room_version = '2.4.2'
+    def activityVersion = '1.4.0'
+
+    // Room and Lifecycle dependencies
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    //kotlin extensions for coroutine support with room
+    implementation("androidx.room:room-ktx:$room_version")
+
+    //kotlin extension for coroutine support with activities
+    implementation "androidx.activity:activity-ktx:$activityVersion"
+    //endregion
+
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
