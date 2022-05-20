@@ -35,4 +35,3 @@ This app provides some effective workouts to keep fit & helps you tracking your 
 - ViewBinding
 - Custom ProgressBar
 
- [Repository](https://github.com/mohamedalaa4j/7MinutesWorkout)
