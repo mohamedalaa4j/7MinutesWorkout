@@ -30,7 +30,7 @@ This app provides some effective workouts to keep fit & helps you tracking your 
 
 - Room Datebase
 - Coroutines
-- MediaPlayer
+- Text-to-speech output
 - RecyclerView
 - ViewBinding
 - Custom ProgressBar
